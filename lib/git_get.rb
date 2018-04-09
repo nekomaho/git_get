@@ -13,9 +13,16 @@ class Search
   end
 end
 
+# TODO: use OptionParser
 user = ARGV[0]
 repo = ARGV[1]
 commit_sha = ARGV[2]
+display_option = ARGV[3] || nil
 
 git = Github.new user: user, repo: repo, oauth_token: ENV['GIT_HUB_AUTH_TOKEN']
-puts Search.new(git, commit_sha).urls.each {|result| '#{result}\n'}
+urls = Search.new(git, commit_sha).urls
+if display_option
+  puts urls.sort.each {|result| '#{result}\n'}
+else
+  puts urls.sort.first
+end
