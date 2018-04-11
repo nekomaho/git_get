@@ -19,6 +19,9 @@ class CommandLineOption
     params = {}
 
     OptionParser.new do |opt|
+      opt.banner = 'Usage: git_get.rb [options] commit_sha'
+      opt.version = '0.0.1'
+
       opt.on('-u USER', '--user') { |v| params[:user] = v }
       opt.on('-r REPO', '--repository') { |v| params[:repository] = v }
       opt.on('-a', '--all') { params[:all] = true }
