@@ -11,9 +11,7 @@ class SearchItem
   end
 
   def exec
-    @github.search.issues(@query).body.items.map do |item|
-      ItemResult.new(item)
-    end
+    @github.search.issues(@query).body.items.map
   end
 end
 
@@ -75,7 +73,9 @@ end
 input = CommandLineOption.new
 
 git = Github.new user: input.user, repo: input.repo, oauth_token: ENV['GIT_HUB_AUTH_TOKEN']
-item_results = SearchItem.new(git, input.sha).exec.sort_by { |item| item.number }
+item_results = SearchItem.new(git, input.sha).exec.map do |item|
+  ItemResult.new(item)
+end.sort_by { |item| item.number }
 
 if input.disp_all?
   item_results.each do |item_result|
