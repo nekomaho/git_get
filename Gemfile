@@ -1,4 +1,4 @@
 source 'https://rubygems.org'
 
-gem "github_api"
+gem "pr_get"
 gem "pry"

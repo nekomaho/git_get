@@ -1,37 +1,6 @@
 require 'pry'
-require 'github_api'
+require 'pr_get'
 require 'optparse'
-
-class SearchItem
-  attr_reader :search_result
-
-  def initialize(github, query)
-    @github = github
-    @query = query
-  end
-
-  def exec
-    @github.search.issues(@query).body.items.map
-  end
-end
-
-class ItemResult
-  def initialize(item)
-    @item = item
-  end
-
-  def number
-    @item.number
-  end
-
-  def url
-    @item.html_url
-  end
-
-  def title
-    @item.title
-  end
-end
 
 class CommandLineOption
   def initialize
@@ -71,11 +40,8 @@ class CommandLineOption
 end
 
 input = CommandLineOption.new
-
-git = Github.new user: input.user, repo: input.repo, oauth_token: ENV['GIT_HUB_AUTH_TOKEN']
-item_results = SearchItem.new(git, input.sha).exec.map do |item|
-  ItemResult.new(item)
-end.sort_by { |item| item.number }
+pr_git = PrGet.new user: input.user, repo: input.repo, oauth_token: ENV['GIT_HUB_AUTH_TOKEN']
+item_results = pr_git.search(sha: input.sha)
 
 if input.disp_all?
   item_results.each do |item_result|
